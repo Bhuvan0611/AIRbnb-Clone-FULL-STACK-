@@ -1,0 +1,184 @@
+<% layout("/layouts/boilerplate") %>
+
+    <style>
+        #filters {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter {
+            text-align: center;
+            margin-right: 2rem;
+            margin-top: 2rem;
+            opacity: 0.7;
+
+            /* 🔥 IMPORTANT FIXES */
+            text-decoration: none;
+            /* remove underline (since now it's <a>) */
+            color: #555;
+            /* default color */
+            transition: all 0.2s ease-in-out;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+        }
+
+        .filter:hover {
+            opacity: 1;
+            cursor: pointer;
+            color: #fe424d;
+            /* Airbnb red effect 🔥 */
+            transform: scale(1.05);
+            /* slight zoom */
+        }
+
+        .filter i {
+            font-size: 1.4rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .filter p {
+            font-size: 0.8rem;
+            margin: 0;
+        }
+
+        .tax-info {
+            display: none;
+        }
+
+        .tax-toggle {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            color: #fe424d;
+            background-color: #f2f2f2;
+            /* light grey */
+            padding: 0.4rem 0.8rem;
+            border-radius: 999px;
+            /* fully rounded 🔥 */
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .tax-toggle label {
+            margin-left: 0.5rem;
+        }
+
+        .tax-toggle input {
+            cursor: pointer;
+        }
+    </style>
+
+    <body>
+        <div id="filters">
+
+            <a href="/listings?category=Rooms" class="filter">
+                <div><i class="fa-solid fa-bed"></i></div>
+                <p>Rooms</p>
+            </a>
+
+            <a href="/listings?category=Iconic Cities" class="filter">
+                <div><i class="fa-solid fa-city"></i></div>
+                <p>Iconic Cities</p>
+            </a>
+
+            <a href="/listings?category=Mountains" class="filter">
+                <div><i class="fa-solid fa-mountain"></i></div>
+                <p>Mountains</p>
+            </a>
+
+            <a href="/listings?category=Apartments" class="filter">
+                <div><i class="fa-solid fa-building"></i></div>
+                <p>Apartments</p>
+            </a>
+
+            <a href="/listings?category=Pools" class="filter">
+                <div><i class="fa-solid fa-water-ladder"></i></div>
+                <p>Pools</p>
+            </a>
+
+            <a href="/listings?category=Camping" class="filter">
+                <div><i class="fa-solid fa-campground"></i></div>
+                <p>Camping</p>
+            </a>
+
+            <a href="/listings?category=Farms" class="filter">
+                <div><i class="fa-solid fa-tractor"></i></div>
+                <p>Farms</p>
+            </a>
+
+            <a href="/listings?category=Beach" class="filter">
+                <div><i class="fa-solid fa-umbrella-beach"></i></div>
+                <p>Beach</p>
+            </a>
+
+            <a href="/listings?category=Luxury" class="filter">
+                <div><i class="fa-solid fa-gem"></i></div>
+                <p>Luxury</p>
+            </a>
+
+            <!-- KEEP YOUR TAX TOGGLE AS IT IS -->
+            <div class="tax-toggle">
+                <div class="form-check-reverse form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">
+                        Display total after taxes
+                    </label>
+                </div>
+            </div>
+
+        </div>
+        <% if (allListings.length===0) { %>
+            <div style="text-align:center; margin-top:2rem;">
+                <h4>No listings found for "<%= search %>" 😔</h4>
+                <p>Try another destination</p>
+            </div>
+            <% } else { %>
+
+                <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+
+                    <% for (let listing of allListings){ %>
+
+                        <a href="/listings/<%= listing._id %>" class="listing-link">
+
+                            <div class="card listing-card">
+                                <img src="<%= listing.image.url %>" class="card-img-top" alt="listing-image"
+                                    style="height: 20rem;" />
+                                <div class="card-img-overlay"></div>
+
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        <b>
+                                            <%= listing.title %>
+                                        </b>
+                                        <br>
+                                        &#8377; <%= listing.price.toLocaleString("en-IN") %>
+                                            <i class="tax-info">&nbsp;&nbsp;+18% GST</i>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </a>
+
+                        <% } %>
+
+                </div>
+
+                <% } %>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", () => {
+                            const taxSwitch = document.getElementById("flexSwitchCheckDefault");
+                            const taxInfo = document.querySelectorAll(".tax-info");
+
+                            taxSwitch.addEventListener("change", () => {
+                                taxInfo.forEach((el) => {
+                                    if (taxSwitch.checked) {
+                                        el.style.display = "inline";
+                                    } else {
+                                        el.style.display = "none";
+                                    }
+                                });
+                            });
+                        });
+                    </script>
